@@ -1,0 +1,65 @@
+#This will prompt user to enter alphabetical characters only and reprompt for valid entry.
+########################################################################################################################
+while True:
+    employname = input('Please enter recipient\'s name: ')
+    if employname.isalpha():
+        print(f'Welcome {employname} to GenPay! This application will print and calculate your weekly paycheck.\n'
+              f'Our system only accepts real numbers as a valid input.\n'
+              f'We do know that you can\'t work more hours than there are in a week.\n'
+              f'Invalid entries will prompt for rentry.')
+        break
+    elif employname.isalpha() == False:
+        print("Invalid entry, only alphabetical characters.")
+########################################################################################################################
+#This function will only allow users to enter a # between 0 and 168 for hours worked. Its next condition prompts for
+#input but restricts user from entering an hourly rate lower than 0. Lastly, it handles valueerrors i.e.
+# any string values (ex. "lol" or '1').
+########################################################################################################################
+def gather_info():
+    while True:
+        try:
+            hours_worked = float(input("Enter the number of hours worked: "))
+            hourly_rate = float(input("Enter your hourly rate: $ "))
+            if hours_worked < 0 or hours_worked > 168:
+                print(f"{hours_worked} is an invalid entry, try again.")
+                continue
+            elif hourly_rate < 0:
+                print(f"${hourly_rate} is an invalid entry, try again.")
+                continue
+            else:
+                print(f"You worked {hours_worked} and earn ${hourly_rate} an hour.")
+            break
+        except ValueError:
+            print("Could not convert data into a number, try again.")
+    return hours_worked, hourly_rate
+#######################################################################################################################
+#This function calculates the input from gatherinfo and spits out calculations of paycheck.
+#######################################################################################################################
+def calculate():
+    hours_worked, hourly_rate = gather_info()
+    grosspay = round(hourly_rate * hours_worked, 2)
+    if hours_worked < 40:
+        print(f"{employname}, your gross pay is: ${grosspay}")
+    else:
+        regularpay = hourly_rate * 40
+        overtime = hours_worked - 40
+        overtimerate = hourly_rate * 1.5
+        overtimetotal = overtimerate * overtime
+        fit = grosspay * .15
+        sit = grosspay * .10
+        fica = grosspay * .02
+        taxes = fit + sit + fica
+        net = regularpay + overtimetotal - taxes
+        print(f"{employname} here is a breakdown of your entire paycheck this month:\n"
+              f"Hours Worked: {hours_worked}\n"
+              f"Hourly Rate: ${hourly_rate}\n"
+              f"Regular Pay: ${regularpay}\n"
+              f"Overtime Pay: ${overtimetotal}\n"
+              f"Gross Pay: ${grosspay}\n"
+              f"FIT: ${fit}\n"
+              f"SIT: ${sit}\n"
+              f"FICA: ${fica}\n"
+              f"Net Pay: ${net}")
+
+calculate()
+print(f"Thank you for using GenPay, we hope to see you again!")
